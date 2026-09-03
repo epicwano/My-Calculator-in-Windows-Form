@@ -20,7 +20,7 @@ namespace Calculator
         enum enOpertions { Sum = 1, Sub = 2, Mult = 3, Divide = 4};
 
         float FirstNumber = 0;
-        float SecondNumber = 0;
+        string SecondNumber = "";
         enOpertions Opertion;
         float Result = 0;
         bool FirstNumberIsSet = false;
@@ -29,14 +29,12 @@ namespace Calculator
         {
             if (FirstNumberIsSet == false)
             {
-                FirstNumber = float.Parse(btn.Text);
-                FirstNumberIsSet = true;
-                txtShowResult.Text = FirstNumber.ToString();
+                txtShowResult.Text += btn.Tag.ToString();
             }
             else
             {
-                SecondNumber = float.Parse(btn.Text);
-                txtShowResult.Text += SecondNumber.ToString();
+                SecondNumber += btn.Tag.ToString();
+                txtShowResult.Text += btn.Tag.ToString();
             }
         }
 
@@ -53,21 +51,24 @@ namespace Calculator
                 {
                     case "rbSum":
                         Opertion = enOpertions.Sum;
-                        txtShowResult.Text += " " + "+" + " ";
+                        FirstNumberIsSet = true;
                         break;
                     case "rbSub":
                         Opertion = enOpertions.Sub;
-                        txtShowResult.Text += " " + "-" + " ";
+                        FirstNumberIsSet = true;
                         break;
                     case "rbMult":
                         Opertion = enOpertions.Mult;
-                        txtShowResult.Text += " " + "X" + " ";
+                        FirstNumberIsSet = true;
                         break;
                     case "rbDiv":
                         Opertion = enOpertions.Divide;
-                        txtShowResult.Text += " " + "/" + " ";
+                        FirstNumberIsSet = true;
                         break;
                 }
+
+                FirstNumber = float.Parse(txtShowResult.Text);
+                txtShowResult.Text += " " + rb.Tag.ToString() + " ";
             }
         }
 
@@ -81,16 +82,16 @@ namespace Calculator
             switch (Opertion)
             {
                 case enOpertions.Sum:
-                    Result = FirstNumber + SecondNumber;
+                    Result = FirstNumber + float.Parse(SecondNumber);
                     break;
                 case enOpertions.Sub:
-                    Result = FirstNumber - SecondNumber;
+                    Result = FirstNumber - float.Parse(SecondNumber);
                     break;
                 case enOpertions.Mult:
-                    Result = FirstNumber * SecondNumber;
+                    Result = FirstNumber * float.Parse(SecondNumber);
                     break;
                 case enOpertions.Divide:
-                    Result = FirstNumber / SecondNumber;
+                    Result = FirstNumber / float.Parse(SecondNumber);
                     break;
             }
 
@@ -111,7 +112,7 @@ namespace Calculator
             txtShowResult.Clear();
 
             FirstNumber = 0;
-            SecondNumber = 0;
+            SecondNumber = "";
             Result = 0;
 
             FirstNumberIsSet = false;
