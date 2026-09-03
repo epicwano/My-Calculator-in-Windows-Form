@@ -45,30 +45,43 @@ namespace Calculator
 
         void SetOperation(RadioButton rb)
         {
+
+            if (FirstNumberIsSet == false)
+            {
+
+                if (!string.IsNullOrEmpty(txtShowResult.Text))
+                {
+                    FirstNumber = float.Parse(txtShowResult.Text);
+                    FirstNumberIsSet = true;
+                }
+                else
+                {
+                    MessageBox.Show("You Must Enter a Number First");
+                    rb.Checked = false;
+                    return;
+                }    
+            }
+
+
             if (rb.Checked)
             {
                 switch (rb.Name)
                 {
                     case "rbSum":
                         Opertion = enOpertions.Sum;
-                        FirstNumberIsSet = true;
                         break;
                     case "rbSub":
                         Opertion = enOpertions.Sub;
-                        FirstNumberIsSet = true;
                         break;
                     case "rbMult":
                         Opertion = enOpertions.Mult;
-                        FirstNumberIsSet = true;
                         break;
                     case "rbDiv":
                         Opertion = enOpertions.Divide;
-                        FirstNumberIsSet = true;
                         break;
                 }
 
-                FirstNumber = float.Parse(txtShowResult.Text);
-                txtShowResult.Text += " " + rb.Tag.ToString() + " ";
+                txtShowResult.Text = FirstNumber.ToString() + " " + rb.Tag.ToString() + " ";
             }
         }
 
@@ -109,6 +122,11 @@ namespace Calculator
 
         private void btnClear_Click(object sender, EventArgs e)
         {
+            rbSum.Checked = false;
+            rbSub.Checked = false;
+            rbMult.Checked = false;
+            rbDiv.Checked = false;
+
             txtShowResult.Clear();
 
             FirstNumber = 0;
@@ -116,11 +134,6 @@ namespace Calculator
             Result = 0;
 
             FirstNumberIsSet = false;
-
-            rbSum.Checked = false;
-            rbSub.Checked = false;
-            rbMult.Checked = false;
-            rbDiv.Checked = false;
         }
 
 
