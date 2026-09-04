@@ -169,6 +169,9 @@ namespace Calculator
             Result = 0;
 
             FirstNumberIsSet = false;
+
+            btn7.Focus();
+
         }
 
         private void btnClear_Click(object sender, EventArgs e)
