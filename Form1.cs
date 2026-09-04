@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Server;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,11 +18,11 @@ namespace Calculator
             InitializeComponent();
         }
 
-        enum enOpertions { Sum = 1, Sub = 2, Mult = 3, Divide = 4};
+        enum enOpertions { Sum = 1, Sub = 2, Mult = 3, Divide = 4,NotSet = 5};
 
         float FirstNumber = 0;
         string SecondNumber = "";
-        enOpertions Opertion;
+        enOpertions Opertion = enOpertions.NotSet;
         float Result = 0;
         bool FirstNumberIsSet = false;
 
@@ -111,16 +112,50 @@ namespace Calculator
             return Result;
         }
 
-        private void btnEqule_Click(object sender, EventArgs e)
+        bool Erorr()
         {
-            Result = Calculate(Opertion);
-
-            txtShowResult.Text += Environment.NewLine;
-            txtShowResult.Text += Result.ToString();
-
+            if (Opertion == enOpertions.NotSet)
+            {
+                errorProvider1.SetError(btnEqule, "Complete the task then claculate");
+                return true;
+            }
+            else if (Opertion == enOpertions.Divide && SecondNumber == "0")
+            {
+                errorProvider1.SetError(btnEqule, "You can not divide by zero");
+                return true;
+            }
+            else
+            {
+                errorProvider1.SetError(btnEqule, "");
+                return false;
+            }
+          
         }
 
-        private void btnClear_Click(object sender, EventArgs e)
+
+        private void btnEqule_Click(object sender, EventArgs e)
+        {
+
+            if (Erorr())
+                return;
+
+
+            Result = Calculate(Opertion);
+
+            byte Numeric = (byte)numericUpDown1.Value;
+
+
+            txtShowResult.Text += Environment.NewLine;
+            txtShowResult.Text += " = " + Result.ToString("F" + Numeric.ToString());
+
+
+            ListLastCalcullations.Items.Add(txtShowResult.Text);
+            lblTotalCalculations.Text = ListLastCalcullations.Items.Count.ToString();
+
+            btnClear.Focus();
+        }
+
+        void ClearAll()
         {
             rbSum.Checked = false;
             rbSub.Checked = false;
@@ -136,6 +171,37 @@ namespace Calculator
             FirstNumberIsSet = false;
         }
 
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            ClearAll();
+        }
 
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("This is a simple calculator application created using C# and Windows Forms.", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void btnClearHistory_Click(object sender, EventArgs e)
+        {
+            ListLastCalcullations.Items.Clear();
+        }
+
+        private void BtnRemoveIndex_Click(object sender, EventArgs e)
+        {
+            if (FirstNumberIsSet == false)
+            { 
+                txtShowResult.Text = txtShowResult.Text.Remove(txtShowResult.Text.Length - 1);
+            }
+            else
+            {
+                SecondNumber = SecondNumber.Remove(SecondNumber.Length - 1);
+                txtShowResult.Text = txtShowResult.Text.Remove(txtShowResult.Text.Length - 1);
+            }
+        }
     }
 }
